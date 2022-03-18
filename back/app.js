@@ -10,13 +10,13 @@ const path = require('path');
 const useSocket = require('./socket');
 const passportConfig = require('./passport');
 const db = require('./models');
-
+const dotenv = require('dotenv');
 const userRouter = require('./router/user');
 const workspaceRouter = require('./router/workspace');
 
 const app = express();
 const httpServer = createServer(app);
-
+dotenv.config();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
