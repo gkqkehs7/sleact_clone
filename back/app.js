@@ -6,6 +6,8 @@ const bodyParser = require('body-parser');
 const passport = require('passport');
 const { createServer } = require('http');
 const path = require('path');
+const hpp = require('hpp');
+const helmet = require('helmet');
 
 const useSocket = require('./socket');
 const passportConfig = require('./passport');
@@ -22,10 +24,17 @@ app.use(bodyParser.json());
 
 app.use(
   cors({
-    origin: true,
+    origin: ['http://localhost:3090', 'sleactminu.com'],
     credentials: true,
   }),
 );
+
+//배포 관련 설정이다
+if (process.env.NODE_ENV === 'production') {
+  app.use(hpp());
+  app.use(helmet());
+}
+//
 
 passportConfig();
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -55,4 +64,4 @@ app.get('/', (req, res) => {
 });
 
 useSocket(httpServer, app);
-httpServer.listen(3095);
+httpServer.listen(80);
