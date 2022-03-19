@@ -55,6 +55,9 @@ app.use(
     resave: false,
     saveUninitialized: false,
     secret: 'nodeasdf',
+    cookie: {
+      httpOnly: true,
+    },
   }),
 );
 app.use(passport.initialize());
@@ -71,7 +74,7 @@ db.sequelize
   .catch(console.error);
 
 app.get('*', (req, res, next) => {
-  res.sendFile(path.join(__dirname, 'public', 'report.html'));
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 useSocket(httpServer, app);
