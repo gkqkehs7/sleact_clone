@@ -59,8 +59,8 @@ db.sequelize
   })
   .catch(console.error);
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
+app.get('*', (req, res, next) => {
+  res.sendFile(path.join(__dirname, 'public', 'report.html'));
 });
 
 useSocket(httpServer, app);
