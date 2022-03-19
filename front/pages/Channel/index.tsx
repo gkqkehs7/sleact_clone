@@ -16,29 +16,26 @@ import InviteChannelModal from '@components/InviteChannelModal';
 import { BsFillPersonPlusFill } from 'react-icons/bs';
 import { toast, ToastContainer } from 'react-toastify';
 
+import { backUrl } from 'config';
 const Channel = () => {
   const { workspace, channel } = useParams<{ workspace: string; channel: string }>();
 
-  const { data: myData } = useSWR(`http://localhost:3095/api/users`, fetcher);
-  const { data: channelData } = useSWR<IChannel[]>(
-    `http://localhost:3095/api/workspaces/${workspace}/channels`,
-    fetcher,
-  );
+  const { data: myData } = useSWR(`${backUrl}/api/users`, fetcher);
+  const { data: channelData } = useSWR<IChannel[]>(`${backUrl}/api/workspaces/${workspace}/channels`, fetcher);
 
   const {
     data: chatData,
     mutate: mutateChat,
     setSize,
   } = useSWRInfinite<IDM[]>(
-    (index) =>
-      `http://localhost:3095/api/workspaces/${workspace}/channels/${channel}/chats?perPage=20&page=${index + 1}`,
+    (index) => `${backUrl}/api/workspaces/${workspace}/channels/${channel}/chats?perPage=20&page=${index + 1}`,
     fetcher,
   );
 
   console.log(chatData);
 
   const { data: channelMembersData } = useSWR<any>(
-    myData ? `http://localhost:3095/api/workspaces/${workspace}/channels/${channel}/members` : null,
+    myData ? `${backUrl}/api/workspaces/${workspace}/channels/${channel}/members` : null,
     fetcher,
   );
   const [socket] = useSocket(workspace);
@@ -56,7 +53,7 @@ const Channel = () => {
 
       if (chat?.trim()) {
         axios
-          .post(`http://localhost:3095/api/workspaces/${workspace}/channels/${channel}/chats`, {
+          .post(`${backUrl}/api/workspaces/${workspace}/channels/${channel}/chats`, {
             content: chat,
           })
           .then(() => {
@@ -139,7 +136,7 @@ const Channel = () => {
           formData.append('image', e.dataTransfer.files[i]);
         }
       }
-      axios.post(`http://localhost:3095/api/workspaces/${workspace}/channels/${channel}/images`, formData).then(() => {
+      axios.post(`${backUrl}/api/workspaces/${workspace}/channels/${channel}/images`, formData).then(() => {
         setOnDragOver(false);
         localStorage.setItem(`${workspace}-${channel}`, new Date().getTime().toString());
       });

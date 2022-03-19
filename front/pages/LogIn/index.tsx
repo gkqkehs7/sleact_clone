@@ -6,12 +6,14 @@ import React, { useCallback, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import useSWR from 'swr';
 
+import { backUrl } from 'config';
+
 const LogIn = () => {
   const {
     data: userData,
     error,
     mutate,
-  } = useSWR('http://localhost:3095/api/users', fetcher, {
+  } = useSWR(`${backUrl}/api/users`, fetcher, {
     dedupingInterval: 1000000, //dedupingInterval내에는 cache에서 불러온다
   });
   const [logInError, setLogInError] = useState(false);
@@ -24,7 +26,7 @@ const LogIn = () => {
       setLogInError(false);
       axios
         .post(
-          'http://localhost:3095/api/users/login',
+          `${backUrl}/api/users/login`,
           { email, password },
           {
             withCredentials: true,

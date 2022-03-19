@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "cross-env TS_NODE_PROJECT=\\\"tsconfig-for-webpack-config.json\\\" webpack serve --env development",
-    "build": "cross-env TS_NODE_PROJECT=\\\"tsconfig-for-webpack-config.json\\\" NODE_ENV=production webpack"
+    "dev": "cross-env TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack serve --env development",
+    "build": "cross-env TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" NODE_ENV=production webpack",
+    "start": "cross-env TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack serve --env production"
   },
   "author": "ZeroCho",
   "license": "MIT",
@@ -26,6 +27,7 @@
     "cross-env": "^7.0.3",
     "dayjs": "^1.10.8",
     "gravatar": "^1.8.2",
+    "pm2": "^5.2.0",
     "react": "^17.0.1",
     "react-custom-scrollbars": "^4.2.1",
     "react-custom-scrollbars-2": "^4.4.0",
