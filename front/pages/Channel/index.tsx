@@ -16,7 +16,7 @@ import InviteChannelModal from '@components/InviteChannelModal';
 import { BsFillPersonPlusFill } from 'react-icons/bs';
 import { toast, ToastContainer } from 'react-toastify';
 
-import { backUrl } from 'config';
+import { backUrl } from '../../config';
 const Channel = () => {
   const { workspace, channel } = useParams<{ workspace: string; channel: string }>();
 

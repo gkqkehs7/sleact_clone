@@ -6,7 +6,7 @@ import React, { useCallback, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import useSWR from 'swr';
 
-import { backUrl } from 'config';
+import { backUrl } from '../../config';
 
 const LogIn = () => {
   const {
