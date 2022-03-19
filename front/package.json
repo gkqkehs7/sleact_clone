@@ -21,6 +21,7 @@
     "@types/react-custom-scrollbars": "^4.0.10",
     "@types/react-dom": "^17.0.1",
     "@types/react-mentions": "^4.1.5",
+    "@types/webpack-bundle-analyzer": "^4.4.1",
     "autosize": "^5.0.1",
     "axios": "^0.21.4",
     "core-js": "^3.15.1",
@@ -40,7 +41,8 @@
     "regexify-string": "^1.0.17",
     "socket.io-client": "^4.4.1",
     "swr": "^1.2.2",
-    "typescript": "^4.4.2"
+    "typescript": "^4.4.2",
+    "webpack-bundle-analyzer": "^4.5.0"
   },
   "devDependencies": {
     "@babel/core": "^7.13.8",
