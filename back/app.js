@@ -19,6 +19,12 @@ const workspaceRouter = require('./router/workspace');
 const app = express();
 const httpServer = createServer(app);
 dotenv.config();
+//배포 관련 설정이다
+if (process.env.NODE_ENV === 'production') {
+  app.use(hpp());
+  app.use(helmet());
+}
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -29,11 +35,6 @@ app.use(
   }),
 );
 
-//배포 관련 설정이다
-if (process.env.NODE_ENV === 'production') {
-  app.use(hpp());
-  app.use(helmet());
-}
 //
 
 passportConfig();
