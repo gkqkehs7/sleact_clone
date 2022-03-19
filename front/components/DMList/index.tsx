@@ -9,14 +9,15 @@ import { NavLink } from 'react-router-dom';
 import useSWR from 'swr';
 import { MdKeyboardArrowDown, MdKeyboardArrowRight } from 'react-icons/md';
 import useSocket from '@hooks/useSocket';
+import { backUrl } from '../../config';
 
 const DMList = () => {
   const { workspace } = useParams<{ workspace?: string }>();
-  const { data: userData } = useSWR<IUser>('http://localhost:3095/api/users', fetcher, {
+  const { data: userData } = useSWR<IUser>(`${backUrl}/api/users`, fetcher, {
     dedupingInterval: 2000, // 2초
   });
   const { data: memberData } = useSWR<IUserWithOnline[]>(
-    userData ? `http://localhost:3095/api/workspaces/${workspace}/members` : null,
+    userData ? `${backUrl}/api/workspaces/${workspace}/members` : null,
     fetcher,
   );
   const [socket] = useSocket(workspace);

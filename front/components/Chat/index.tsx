@@ -5,6 +5,7 @@ import gravatar from 'gravatar';
 import dayjs from 'dayjs';
 import regexifyString from 'regexify-string';
 import { Link, useParams } from 'react-router-dom';
+import { backUrl } from '../../config';
 
 interface Props {
   data: IDM | IChat;
@@ -16,7 +17,7 @@ const Chat: VFC<Props> = ({ data }) => {
   const result = useMemo<(string | JSX.Element)[] | JSX.Element>(
     () =>
       data.content.startsWith('uploads\\') || data.content.startsWith('uploads/') ? (
-        <img src={`http://localhost:3095/${data.content}`} style={{ maxHeight: 200 }} />
+        <img src={`${backUrl}/${data.content}`} style={{ maxHeight: 200 }} />
       ) : (
         regexifyString({
           input: data.content,

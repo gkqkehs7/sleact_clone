@@ -15,17 +15,18 @@ import useSocket from '@hooks/useSocket';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { backUrl } from '../../config';
 
 const DirectMessage = () => {
   const { workspace, id } = useParams<{ workspace: string; id: string }>();
-  const { data: userData } = useSWR(`http://localhost:3095/api/workspaces/${workspace}/members/${id}`, fetcher);
-  const { data: myData } = useSWR(`http://localhost:3095/api/users`, fetcher);
+  const { data: userData } = useSWR(`${backUrl}/api/workspaces/${workspace}/members/${id}`, fetcher);
+  const { data: myData } = useSWR(`${backUrl}/api/users`, fetcher);
   const {
     data: chatData,
     mutate: mutateChat,
     setSize,
   } = useSWRInfinite<IDM[]>(
-    (index) => `http://localhost:3095/api/workspaces/${workspace}/dms/${id}/chats?perPage=20&page=${index + 1}`,
+    (index) => `${backUrl}/api/workspaces/${workspace}/dms/${id}/chats?perPage=20&page=${index + 1}`,
     fetcher,
   );
 
@@ -43,7 +44,7 @@ const DirectMessage = () => {
 
       if (chat?.trim()) {
         axios
-          .post(`http://localhost:3095/api/workspaces/${workspace}/dms/${id}/chats`, {
+          .post(`${backUrl}/api/workspaces/${workspace}/dms/${id}/chats`, {
             content: chat,
           })
           .then(() => {
@@ -128,7 +129,7 @@ const DirectMessage = () => {
           formData.append('image', e.dataTransfer.files[i]);
         }
       }
-      axios.post(`http://localhost:3095/api/workspaces/${workspace}/dms/${id}/images`, formData).then(() => {
+      axios.post(`${backUrl}/api/workspaces/${workspace}/dms/${id}/images`, formData).then(() => {
         setOnDragOver(false);
         localStorage.setItem(`${workspace}-${id}`, new Date().getTime().toString());
       });

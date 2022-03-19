@@ -7,6 +7,7 @@ import fetcher from '@utils/fetcher';
 import { useParams } from 'react-router';
 import { Mention, SuggestionDataItem } from 'react-mentions';
 import gravatar from 'gravatar';
+import { backUrl } from '../../config';
 
 interface Props {
   chat: string;
@@ -17,9 +18,9 @@ interface Props {
 const ChatBox: VFC<Props> = ({ chat, onSubmitForm, onChangeChat, placeholder }) => {
   // 공통적으로 쓰이는 component들은 같이 사용해줘야 하기 때문에 onSubmitForm같은거는 props로 전달
   const { workspace } = useParams<{ workspace: string }>();
-  const { data: userData, error, mutate } = useSWR<IUser | false>('http://localhost:3095/api/users', fetcher);
+  const { data: userData, error, mutate } = useSWR<IUser | false>(`${backUrl}/api/users`, fetcher);
   const { data: memberData } = useSWR<IUser[]>(
-    userData ? `http://localhost:3095/api/workspaces/${workspace}/members` : null,
+    userData ? `${backUrl}/api/workspaces/${workspace}/members` : null,
     fetcher,
   );
 

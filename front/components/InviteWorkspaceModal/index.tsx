@@ -8,6 +8,7 @@ import React, { FC, useCallback } from 'react';
 import { useParams } from 'react-router';
 import { toast } from 'react-toastify';
 import useSWR from 'swr';
+import { backUrl } from '../../config';
 
 interface Props {
   show: boolean;
@@ -17,9 +18,9 @@ interface Props {
 const InviteWorkspaceModal: FC<Props> = ({ show, onCloseModal, setShowInviteWorkspaceModal }) => {
   const { workspace } = useParams<{ workspace: string; channel: string }>();
   const [newMember, onChangeNewMember, setNewMember] = useInput('');
-  const { data: userData } = useSWR<IUser>('http://localhost:3095/api/users', fetcher);
+  const { data: userData } = useSWR<IUser>(`${backUrl}/api/users`, fetcher);
   const { mutate: revalidateMember } = useSWR<IUser[]>(
-    userData ? `http://localhost:3095/api/workspaces/${workspace}/members` : null,
+    userData ? `${backUrl}/api/workspaces/${workspace}/members` : null,
     fetcher,
   );
 
@@ -30,7 +31,7 @@ const InviteWorkspaceModal: FC<Props> = ({ show, onCloseModal, setShowInviteWork
         return;
       }
       axios
-        .post(`http://localhost:3095/api/workspaces/${workspace}/members`, {
+        .post(`${backUrl}/api/workspaces/${workspace}/members`, {
           email: newMember,
         })
         .then(() => {

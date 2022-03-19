@@ -5,9 +5,10 @@ import React, { useCallback, useState } from 'react';
 import { Redirect } from 'react-router';
 import useSWR from 'swr';
 import { Form, Label, Input, Button, Header, Error, Success, Link } from './styles';
+import { backUrl } from '../../config';
 
 function SignUp() {
-  const { data: userData } = useSWR('/api/users', fetcher);
+  const { data: userData } = useSWR(`${backUrl}/api/users`, fetcher);
   const [signUpError, setSignUpError] = useState(false);
   const [signUpSuccess, setSignUpSuccess] = useState(false);
   const [mismatchError, setMismatchError] = useState(false);
@@ -42,7 +43,7 @@ function SignUp() {
         setSignUpError(false);
         setSignUpSuccess(false);
         axios
-          .post('http://localhost:3095/api/users', { email, nickname, password })
+          .post(`${backUrl}/api/users`, { email, nickname, password })
           .then((response) => {
             console.log(response);
             setSignUpSuccess(true);

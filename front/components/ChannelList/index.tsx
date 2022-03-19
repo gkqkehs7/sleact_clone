@@ -6,6 +6,7 @@ import React, { FC, useCallback, useState } from 'react';
 import { useParams } from 'react-router';
 import useSWR from 'swr';
 import { MdKeyboardArrowDown, MdKeyboardArrowRight } from 'react-icons/md';
+import { backUrl } from '../../config';
 
 interface Props {
   channelData?: IChannel[];
@@ -15,11 +16,11 @@ interface Props {
 const ChannelList: FC<Props> = () => {
   const { workspace } = useParams<{ workspace?: string }>();
   const [channelCollapse, setChannelCollapse] = useState(false);
-  const { data: userData } = useSWR<IUser>('http://localhost:3095/api/users', fetcher, {
+  const { data: userData } = useSWR<IUser>(`${backUrl}/api/users`, fetcher, {
     dedupingInterval: 2000, // 2초
   });
   const { data: channelData } = useSWR<IChannel[]>(
-    userData ? `http://localhost:3095/api/workspaces/${workspace}/channels` : null,
+    userData ? `${backUrl}/api/workspaces/${workspace}/channels` : null,
     fetcher,
   );
 

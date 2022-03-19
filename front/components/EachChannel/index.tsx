@@ -4,6 +4,7 @@ import React, { useEffect, VFC } from 'react';
 import { useParams } from 'react-router';
 import { NavLink, useLocation } from 'react-router-dom';
 import useSWR from 'swr';
+import { backUrl } from '../../config';
 
 interface Props {
   channel: IChannel;
@@ -11,14 +12,12 @@ interface Props {
 const EachChannel: VFC<Props> = ({ channel }) => {
   const { workspace } = useParams<{ workspace?: string }>();
   const location = useLocation();
-  const { data: userData } = useSWR<IUser>('http://localhost:3095/api/users', fetcher, {
+  const { data: userData } = useSWR<IUser>(`${backUrl}/api/users`, fetcher, {
     dedupingInterval: 2000, // 2초
   });
   const date = localStorage.getItem(`${workspace}-${channel.name}`) || 0;
   const { data: count, mutate } = useSWR<number>(
-    userData
-      ? `http://localhost:3095/api/workspaces/${workspace}/channels/${channel.name}/unreads?after=${date}`
-      : null,
+    userData ? `${backUrl}/api/workspaces/${workspace}/channels/${channel.name}/unreads?after=${date}` : null,
     fetcher,
   );
 

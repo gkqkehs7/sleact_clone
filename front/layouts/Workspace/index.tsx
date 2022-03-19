@@ -33,6 +33,7 @@ import InviteChannelModal from '@components/InviteChannelModal';
 import ChannelList from '@components/ChannelList';
 import DMList from '@components/DMList';
 import useSocket from '@hooks/useSocket';
+import { backUrl } from '../../config';
 
 const DirectMessage = loadable(() => import('@pages/DirectMessage'));
 const Channel = loadable(() => import('@pages/Channel'));
@@ -55,12 +56,12 @@ const Workspace: VFC = () => {
     data: userData,
     error,
     mutate,
-  } = useSWR<IUser | false>('http://localhost:3095/api/users', fetcher, {
+  } = useSWR<IUser | false>(`${backUrl}/api/users`, fetcher, {
     dedupingInterval: 2000,
   });
 
   const { data: channelData } = useSWR<IChannel[]>(
-    userData ? `http://localhost:3095/api/workspaces/${workspace}/channels` : null,
+    userData ? `${backUrl}/api/workspaces/${workspace}/channels` : null,
     fetcher,
   );
 
@@ -79,7 +80,7 @@ const Workspace: VFC = () => {
 
   const onLogOut = useCallback(() => {
     axios
-      .post('http://localhost:3095/api/users/logout', null, {
+      .post(`${backUrl}/api/users/logout`, null, {
         withCredentials: true,
       })
       .then(() => {
@@ -99,7 +100,7 @@ const Workspace: VFC = () => {
       if (!newUrl || !newUrl.trim()) return;
       console.log('클릭');
       axios
-        .post('http://localhost:3095/api/workspaces', {
+        .post(`${backUrl}/api/workspaces`, {
           workspace: newWorkspace,
           url: newUrl,
         })
