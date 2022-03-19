@@ -8,6 +8,7 @@ const { createServer } = require('http');
 const path = require('path');
 const hpp = require('hpp');
 const helmet = require('helmet');
+const csp = require('helmet-csp');
 
 const useSocket = require('./socket');
 const passportConfig = require('./passport');
@@ -21,19 +22,29 @@ const httpServer = createServer(app);
 dotenv.config();
 //배포 관련 설정이다
 if (process.env.NODE_ENV === 'production') {
+  app.enable('trust proxy');
+  app.use(helmet({ contentSecurityPolicy: false }));
   app.use(hpp());
-  app.use(helmet());
+  app.use(
+    csp({
+      directives: {
+        defaultSrc: ["'self'"],
+        styleSrc: ["'self'"],
+        scriptSrc: ["'self'"],
+      },
+    }),
+  );
+} else {
+  app.use(
+    cors({
+      origin: true,
+      credentials: true,
+    }),
+  );
 }
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
-app.use(
-  cors({
-    origin: ['http://localhost:3090', 'sleactminu.com'],
-    credentials: true,
-  }),
-);
 
 passportConfig();
 app.use(express.static(path.join(__dirname, 'public')));
