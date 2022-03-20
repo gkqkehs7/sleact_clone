@@ -17,8 +17,8 @@ module.exports = {
   production: {
     username: 'root',
     password: process.env.DB_PASSWORD,
-    database: 'database_production',
-    host: '127.0.0.1',
+    database: 'sleact_clone',
+    host: '15.164.103.236',
     dialect: 'mysql',
   },
 };
