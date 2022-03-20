@@ -1,6 +1,6 @@
 import fetcher from '@utils/fetcher';
 import axios from 'axios';
-import React, { VFC, useCallback, useState, useEffect } from 'react';
+import React, { VFC, useCallback, useState, useEffect, Suspense } from 'react';
 import { Switch, Route, Redirect, Link, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import gravatar from 'gravatar';
@@ -36,8 +36,8 @@ import useSocket from '@hooks/useSocket';
 import { backUrl } from '../../config';
 import { retryLazy } from '@utils/lazyUtils';
 
-const DirectMessage = retryLazy(() => import('@pages/DirectMessage'));
-const Channel = retryLazy(() => import('@pages/Channel'));
+const DirectMessage = loadable(() => import('@pages/DirectMessage'));
+const Channel = loadable(() => import('@pages/Channel'));
 
 //children필요없는 component는 VFC 필요하면 FC
 const Workspace: VFC = () => {
@@ -194,8 +194,13 @@ const Workspace: VFC = () => {
         </Channels>
         <Chats>
           <Switch>
-            <Route path="/workspace/:workspace/channel/:channel" component={Channel} />
-            <Route path="/workspace/:workspace/dm/:id" component={DirectMessage} />
+            <Suspense fallback={<h1>loading</h1>}>
+              <Route path="/workspace/:workspace/channel/:channel" component={Channel} />
+            </Suspense>
+
+            <Suspense fallback={<h1>loading</h1>}>
+              <Route path="/workspace/:workspace/dm/:id" component={DirectMessage} />
+            </Suspense>
           </Switch>
         </Chats>
       </WorkspaceWrapper>
