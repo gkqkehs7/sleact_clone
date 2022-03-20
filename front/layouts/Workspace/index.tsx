@@ -34,9 +34,10 @@ import ChannelList from '@components/ChannelList';
 import DMList from '@components/DMList';
 import useSocket from '@hooks/useSocket';
 import { backUrl } from '../../config';
+import { retryLazy } from '@utils/lazyUtils';
 
-const DirectMessage = loadable(() => import('@pages/DirectMessage'));
-const Channel = loadable(() => import('@pages/Channel'));
+const DirectMessage = retryLazy(() => import('@pages/DirectMessage'));
+const Channel = retryLazy(() => import('@pages/Channel'));
 
 //children필요없는 component는 VFC 필요하면 FC
 const Workspace: VFC = () => {
