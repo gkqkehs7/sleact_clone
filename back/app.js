@@ -16,10 +16,17 @@ const db = require('./models');
 const dotenv = require('dotenv');
 const userRouter = require('./router/user');
 const workspaceRouter = require('./router/workspace');
-
+dotenv.config();
 const app = express();
 const httpServer = createServer(app);
-dotenv.config();
+
+db.sequelize
+  .sync()
+  .then(() => {
+    console.log('db연결 성공');
+  })
+  .catch(console.error);
+
 //배포 관련 설정이다
 if (process.env.NODE_ENV === 'production') {
   app.enable('trust proxy');
@@ -50,29 +57,26 @@ passportConfig();
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(cookieParser('nodeasdf'));
-app.use(
-  session({
-    resave: false,
-    saveUninitialized: false,
-    secret: 'nodeasdf',
-    cookie: {
-      httpOnly: true,
-    },
-  }),
-);
+
+const sessionOption = {
+  resave: false,
+  saveUninitialized: false,
+  secret: 'nodeasdf',
+  cookie: {
+    httpOnly: true,
+  },
+};
+app.use(session(sessionOption));
 app.use(passport.initialize());
 app.use(passport.session());
 
+if (process.env.NODE_ENV === 'production') {
+  sessionOption.cookie.secure = true;
+  sessionOption.cookie.proxy = true;
+}
+
 app.use('/api/users', userRouter);
 app.use('/api/workspaces', workspaceRouter);
-
-db.sequelize
-  .sync()
-  .then(() => {
-    console.log('db연결 성공');
-  })
-  .catch(console.error);
-
 app.get('*', (req, res, next) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
