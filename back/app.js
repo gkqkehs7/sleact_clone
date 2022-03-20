@@ -62,6 +62,7 @@ const sessionOption = {
   resave: false,
   saveUninitialized: false,
   secret: 'nodeasdf',
+  proxy: true,
   cookie: {
     httpOnly: true,
   },
