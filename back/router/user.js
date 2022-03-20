@@ -27,6 +27,7 @@ router.post('/login', isNotLoggedIn, (req, res, next) => {
     return req.login(user, async (loginError) => {
       //모두 통과했다면 passport에서 마지막 로그인
       //passport에서 로그인 에러발생했을 시 next에게 위임
+      console.log('되고잇나?');
       if (loginError) {
         console.error(loginError);
         return next(loginError);
@@ -74,6 +75,7 @@ router.post('/', isNotLoggedIn, async (req, res, next) => {
     const channel = await Channel.findOne({ where: { id: 1 } });
     await sleact.addMembers(user);
     await channel.addMembers(user);
+    console.log('db에 저장 성공!');
     return res.status(201).send('ok');
   } catch (error) {
     console.log(error);
