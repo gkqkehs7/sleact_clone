@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunksleact_ts_front=self.webpackChunksleact_ts_front||[]).push([[394],{5394:function(t,e,n){n.r(e);var s=n(67294);e.default=function(){return s.createElement("div",null)}}}]);
