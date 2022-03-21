@@ -8,7 +8,7 @@ module.exports = {
     dialect: 'mysql',
     dialectOptions: {
       options: {
-        requestTimeout: 3000,
+        encrypt: false,
       },
     },
   },
