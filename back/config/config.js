@@ -6,6 +6,11 @@ module.exports = {
     database: 'sleact_clone',
     host: 'localhost',
     dialect: 'mysql',
+    dialectOptions: {
+      options: {
+        requestTimeout: 3000,
+      },
+    },
   },
   test: {
     username: 'root',
