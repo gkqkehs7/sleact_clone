@@ -35,7 +35,7 @@ router.post('/login', isNotLoggedIn, (req, res, next) => {
       //req.login은 index.js의 serializeuser실행
       //이떄부터 req.user에 유저 정보가 담긴다
       console.log('로그인 성공!');
-      return res.status(200).json('로그인 성공');
+      return res.status(200).send('로그인 성공');
     });
   })(req, res, next);
 });
