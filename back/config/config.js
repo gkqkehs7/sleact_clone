@@ -23,7 +23,7 @@ module.exports = {
     username: 'root',
     password: process.env.DB_PASSWORD,
     database: 'sleact_clone',
-    host: '15.164.103.236',
+    host: '127.0.0.1',
     dialect: 'mysql',
     dialectOptions: {
       options: {
