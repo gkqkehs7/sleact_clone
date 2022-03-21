@@ -27,13 +27,14 @@ router.post('/login', isNotLoggedIn, (req, res, next) => {
     return req.login(user, async (loginError) => {
       //모두 통과했다면 passport에서 마지막 로그인
       //passport에서 로그인 에러발생했을 시 next에게 위임
-      console.log('되고잇나?');
+
       if (loginError) {
         console.error(loginError);
         return next(loginError);
       }
       //req.login은 index.js의 serializeuser실행
       //이떄부터 req.user에 유저 정보가 담긴다
+      console.log('로그인 성공!');
       return res.status(200).json('로그인 성공');
     });
   })(req, res, next);
