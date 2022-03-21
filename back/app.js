@@ -33,15 +33,6 @@ if (process.env.NODE_ENV === 'production') {
   app.use(helmet({ contentSecurityPolicy: false }));
   app.use(hpp());
   app.use(
-    csp({
-      directives: {
-        defaultSrc: ["'self'"],
-        styleSrc: ["'self'"],
-        scriptSrc: ["'self'"],
-      },
-    }),
-  );
-  app.use(
     cors({
       origin: true,
       credentials: true,
@@ -68,17 +59,13 @@ const sessionOption = {
   resave: false,
   saveUninitialized: false,
   secret: 'nodeasdf',
-  proxy: true,
   cookie: {
     httpOnly: true,
     secure: true,
-    sameSite: 'none',
+    sameSite: 'None',
+    proxy: true,
   },
 };
-if (process.env.NODE_ENV === 'production') {
-  sessionOption.cookie.secure = true;
-  sessionOption.cookie.proxy = true;
-}
 
 app.use(session(sessionOption));
 app.use(passport.initialize());
