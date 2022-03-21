@@ -2,7 +2,7 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    queryInterface.bulkDelete('users', { id: 1 });
+    queryInterface.bulkDelete('Users', { id: 1 });
   },
 
   async down(queryInterface, Sequelize) {
