@@ -16,8 +16,8 @@ const Chat: VFC<Props> = ({ data }) => {
 
   const result = useMemo<(string | JSX.Element)[] | JSX.Element>(
     () =>
-      data.content.startsWith('uploads\\') || data.content.startsWith('uploads/') ? (
-        <img src={`${backUrl}/${data.content}`} style={{ maxHeight: 200 }} />
+      data.content.startsWith('https://sleact-clone.s3.ap-northeast-2.amazonaws.com/original/') ? (
+        <img src={`${data.content}`} style={{ maxHeight: 200 }} />
       ) : (
         regexifyString({
           input: data.content,
