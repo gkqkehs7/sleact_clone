@@ -12,7 +12,7 @@ module.exports = class ChannelChat extends Model {
       },
       {
         modelName: 'ChannelChat',
-        tableName: 'ChannelChats',
+        tableName: 'channelChats',
         charset: 'utf8',
         collate: 'utf8_general_ci',
         sequelize,

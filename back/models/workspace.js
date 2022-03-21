@@ -17,7 +17,7 @@ module.exports = class Workspace extends Model {
       },
       {
         modelName: 'Workspace',
-        tableName: 'Workspaces',
+        tableName: 'workspaces',
         paranoid: true,
         charset: 'utf8',
         collate: 'utf8_general_ci',
