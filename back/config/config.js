@@ -8,7 +8,7 @@ module.exports = {
     dialect: 'mysql',
     dialectOptions: {
       options: {
-        encrypt: false,
+        requestTimeout: 3000,
       },
     },
   },
@@ -25,5 +25,10 @@ module.exports = {
     database: 'sleact_clone',
     host: '15.164.103.236',
     dialect: 'mysql',
+    dialectOptions: {
+      options: {
+        requestTimeout: 3000,
+      },
+    },
   },
 };
