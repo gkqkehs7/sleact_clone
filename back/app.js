@@ -32,6 +32,12 @@ if (process.env.NODE_ENV === 'production') {
   app.enable('trust proxy');
   app.use(helmet({ contentSecurityPolicy: false }));
   app.use(hpp());
+  app.use(
+    cors({
+      origin: '*',
+      credentials: true,
+    }),
+  );
 } else {
   app.use(
     cors({
