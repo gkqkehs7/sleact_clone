@@ -9,7 +9,7 @@ module.exports = {
         updatedAt: new Date(),
       },
     ]);
-    await queryInterface.bulkInsert('workspaces', [
+    await queryInterface.bulkInsert('Workspaces', [
       {
         id: 1,
         name: 'Sleact',
