@@ -8,7 +8,7 @@ import ChatBox from '@components/ChatBox';
 import ChatList from '@components/ChatList';
 import useInput from '@hooks/useInput';
 import axios from 'axios';
-import { IChannel, IDM, IUser } from '@typings/db';
+import { IChannel, IChat, IDM, IUser } from '@typings/db';
 import makeSection from '@utils/makeSections';
 import useSocket from '@hooks/useSocket';
 import { Scrollbars } from 'react-custom-scrollbars-2';
@@ -22,18 +22,16 @@ const Channel = () => {
   const { workspace, channel } = useParams<{ workspace: string; channel: string }>();
 
   const { data: myData } = useSWR(`${backUrl}/api/users`, fetcher);
-  const { data: channelData } = useSWR<IChannel[]>(`${backUrl}/api/workspaces/${workspace}/channels`, fetcher);
+  const { data: channelData } = useSWR<any>(`${backUrl}/api/workspaces/${workspace}/channels`, fetcher);
 
   const {
     data: chatData,
     mutate: mutateChat,
     setSize,
-  } = useSWRInfinite<IDM[]>(
+  } = useSWRInfinite<any>(
     (index) => `${backUrl}/api/workspaces/${workspace}/channels/${channel}/chats?perPage=20&page=${index + 1}`,
     fetcher,
   );
-
-  console.log(chatData);
 
   const { data: channelMembersData } = useSWR<any>(
     myData ? `${backUrl}/api/workspaces/${workspace}/channels/${channel}/members` : null,
@@ -51,24 +49,35 @@ const Channel = () => {
   const onSubmitForm = useCallback(
     (e) => {
       e.preventDefault();
-
-      if (chat?.trim()) {
+      if (chat?.trim() && chatData && channelData && myData) {
+        const savedChat = chat;
+        mutateChat((prevChatData) => {
+          prevChatData?.[0].unshift({
+            id: (chatData[0][0]?.id || 0) + 1,
+            content: savedChat,
+            UserId: myData.id,
+            User: myData,
+            createdAt: new Date(),
+            ChannelId: channelData.id,
+            Channel: channelData,
+          });
+          return prevChatData;
+        }, false).then(() => {
+          localStorage.setItem(`${workspace}-${channel}`, new Date().getTime().toString());
+          setChat('');
+          if (scrollbarRef.current) {
+            console.log('scrollToBottom!', scrollbarRef.current?.getValues());
+            scrollbarRef.current.scrollToBottom();
+          }
+        });
         axios
           .post(`${backUrl}/api/workspaces/${workspace}/channels/${channel}/chats`, {
-            content: chat,
-          })
-          .then(() => {
-            mutateChat();
-            setChat('');
-            localStorage.setItem(`${workspace}-${channel}`, new Date().getTime().toString());
-            setTimeout(() => {
-              scrollbarRef.current?.scrollToBottom();
-            }, 100);
+            content: savedChat,
           })
           .catch(console.error);
       }
     },
-    [chat],
+    [chat, workspace, channel, channelData, myData, chatData, mutateChat, setChat],
   );
 
   useEffect(() => {
@@ -77,22 +86,37 @@ const Channel = () => {
 
   const onMessage = useCallback(
     (data: any) => {
-      mutateChat((chatData) => {
-        chatData?.[0].push(data);
-        localStorage.setItem(`${workspace}-${channel}`, new Date().getTime().toString());
-        return chatData;
-      }, false).then(() => {
-        toast.success('새 메시지가 도착했습니다.', {
-          onClick() {
-            scrollbarRef.current?.scrollToBottom();
-          },
-          closeOnClick: true,
+      if (
+        data.Channel.name === channel &&
+        (data.content.startsWith('uploads\\') || data.content.startsWith('uploads/') || data.UserId !== myData?.id)
+      ) {
+        mutateChat((chatData) => {
+          chatData?.[0].unshift(data);
+          return chatData;
+        }, false).then(() => {
+          if (scrollbarRef.current) {
+            if (
+              scrollbarRef.current.getScrollHeight() <
+              scrollbarRef.current.getClientHeight() + scrollbarRef.current.getScrollTop() + 150
+            ) {
+              console.log('scrollToBottom!', scrollbarRef.current?.getValues());
+              setTimeout(() => {
+                scrollbarRef.current?.scrollToBottom();
+              }, 100);
+            } else {
+              toast.success('새 메시지가 도착했습니다.', {
+                onClick() {
+                  scrollbarRef.current?.scrollToBottom();
+                },
+                closeOnClick: true,
+              });
+            }
+          }
         });
-      });
+      }
     },
-    [myData, mutateChat],
+    [channel, myData, mutateChat],
   );
-
   useEffect(() => {
     // on에선 이벤트 이름, callback 함수
     socket?.on('chat', onMessage);
