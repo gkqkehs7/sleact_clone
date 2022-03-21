@@ -5,7 +5,6 @@ const Workspace = require('../models/workspace');
 
 module.exports = () => {
   passport.serializeUser((user, done) => {
-    console.log('쿠키 생성했음?');
     done(null, user.id); //처음 로그인시 user의 id로 쿠키만들기
     //아까랑 같이 서버에러 , 성공
   });

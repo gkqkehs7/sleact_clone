@@ -466,7 +466,7 @@ router.post('/:workspace/channels/:channelName/images', isLoggedIn, upload.array
     if (!exWorkspace) {
       return res.status(403).send('존재하지 않는 워크스페이스 입니다');
     }
-
+    console.log('req.file:', req.files[0]);
     const exChannel = await exWorkspace.getChannels({ where: { name: req.params.channelName } });
     if (!exChannel) {
       return res.status(403).send('존재하지 않는 채널입니다');
@@ -475,7 +475,7 @@ router.post('/:workspace/channels/:channelName/images', isLoggedIn, upload.array
     const chat = await ChannelChat.create({
       UserId: req.user.id,
       ChannelId: exChannel[0].id,
-      content: req.files[0].path,
+      content: req.files[0].location,
     });
 
     const chatWithUser = await ChannelChat.findOne({

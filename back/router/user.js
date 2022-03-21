@@ -10,7 +10,6 @@ const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 var router = express.Router();
 
 router.get('/', (req, res, next) => {
-  console.log('req.user:', req.user);
   return res.json(req.user || false);
 });
 
