@@ -59,11 +59,6 @@ const sessionOption = {
   resave: false,
   saveUninitialized: false,
   secret: 'nodeasdf',
-  cookie: {
-    secure: true,
-    sameSite: 'None',
-    proxy: true,
-  },
 };
 
 app.use(session(sessionOption));
