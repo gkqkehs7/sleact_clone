@@ -71,6 +71,8 @@ const sessionOption = {
   proxy: true,
   cookie: {
     httpOnly: true,
+    secure: true,
+    sameSite: 'none',
   },
 };
 if (process.env.NODE_ENV === 'production') {
