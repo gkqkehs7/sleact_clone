@@ -194,13 +194,8 @@ const Workspace: VFC = () => {
         </Channels>
         <Chats>
           <Switch>
-            <Suspense fallback={<h1>loading</h1>}>
-              <Route path="/workspace/:workspace/channel/:channel" component={Channel} />
-            </Suspense>
-
-            <Suspense fallback={<h1>loading</h1>}>
-              <Route path="/workspace/:workspace/dm/:id" component={DirectMessage} />
-            </Suspense>
+            <Route path="/workspace/:workspace/channel/:channel" component={Channel} />
+            <Route path="/workspace/:workspace/dm/:id" component={DirectMessage} />
           </Switch>
         </Chats>
       </WorkspaceWrapper>

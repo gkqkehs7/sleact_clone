@@ -11,6 +11,8 @@ const DM = require('../models/dm');
 const ChannelChat = require('../models/channelChat');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 
+const multerS3 = require('multer-s3');
+const AWS = require('aws-sdk');
 var router = express.Router();
 
 //workspace 생성
@@ -423,22 +425,39 @@ try {
   console.error('uploads 폴더가 없어 uploads 폴더를 생성합니다.');
   fs.mkdirSync('uploads');
 }
+
+AWS.config.update({
+  accessKeyId: process.env.S3_ACCESS_KEY_ID,
+  secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+  region: 'ap-northeast-2',
+});
+
 const upload = multer({
-  storage: multer.diskStorage({
-    destination(req, file, cb) {
-      //파일 저장하는 곳
-      cb(null, 'uploads/');
-    },
-    filename(req, file, cb) {
-      //extname 이미지.png -> .png 확장자 추출
-      //basename 이미지.png -> 이미지 파일이름 추출
-      //최종 이미지.png -> 이미지20220304.png
-      const ext = path.extname(file.originalname);
-      cb(null, path.basename(file.originalname, ext) + Date.now() + ext);
+  storage: multerS3({
+    s3: new AWS.S3(),
+    bucket: 'sleact-clone',
+    key(req, file, cb) {
+      cb(null, `original/${Date.now()}_${path.basename(file.originalname)}`);
     },
   }),
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
 });
+
+// const upload = multer({
+//   storage: multer.diskStorage({
+//     destination(req, file, cb) {
+//       //파일 저장하는 곳
+//       cb(null, 'uploads/');
+//     },
+//     filename(req, file, cb) {
+//       //extname 이미지.png -> .png 확장자 추출
+//       //basename 이미지.png -> 이미지 파일이름 추출
+//       //최종 이미지.png -> 이미지20220304.png
+//       const ext = path.extname(file.originalname);
+//       cb(null, path.basename(file.originalname, ext) + Date.now() + ext);
+//     },
+//   }),
+//   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+// });
 
 //images업로드 - chat
 router.post('/:workspace/channels/:channelName/images', isLoggedIn, upload.array('image'), async (req, res, next) => {
@@ -453,7 +472,6 @@ router.post('/:workspace/channels/:channelName/images', isLoggedIn, upload.array
       return res.status(403).send('존재하지 않는 채널입니다');
     }
 
-    console.log(req.files);
     const chat = await ChannelChat.create({
       UserId: req.user.id,
       ChannelId: exChannel[0].id,
@@ -494,12 +512,13 @@ router.post('/:workspace/dms/:id/images', isLoggedIn, upload.array('image'), asy
       return res.status(403).send('존재하지 않는 유저입니다');
     }
 
+    console.log(req.files[0]);
     const newDM = await DM.create({
       UserId: req.user.id,
       WorkspaceId: exWorkspace.id,
       SenderId: req.user.id,
       ReceiverId: exUser[0].id,
-      content: req.files[0].path,
+      content: req.files[0].location,
     });
 
     const dmWithSender = await DM.findOne({
