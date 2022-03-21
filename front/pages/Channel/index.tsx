@@ -15,6 +15,7 @@ import { Scrollbars } from 'react-custom-scrollbars-2';
 import InviteChannelModal from '@components/InviteChannelModal';
 import { BsFillPersonPlusFill } from 'react-icons/bs';
 import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import { backUrl } from '../../config';
 const Channel = () => {

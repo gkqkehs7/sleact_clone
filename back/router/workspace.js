@@ -138,7 +138,10 @@ router.get('/:workspace/members/:id', isLoggedIn, async (req, res, next) => {
       return res.status(403).send('존재하지 않는 워크스페이스 입니다');
     }
 
-    const exUser = await User.findOne({ where: { id: req.params.id }, attributes: ['id', 'nickname', 'email'] });
+    const exUser = await User.findOne({
+      where: { id: parseInt(req.params.id, 10) },
+      attributes: ['id', 'nickname', 'email'],
+    });
     if (!exUser) {
       return res.status(403).send('존재하지 않는 유저입니다');
     }
@@ -190,7 +193,7 @@ router.post('/:workspace/dms/:id/chats', isLoggedIn, async (req, res, next) => {
       return res.status(403).send('존재하지 않는 워크스페이스 입니다');
     }
 
-    const exUser = await User.findOne({ where: { id: req.params.id } });
+    const exUser = await User.findOne({ where: { id: parseInt(req.params.id, 10) } });
     if (!exUser) {
       return res.status(403).send('존재하지 않는 유저입니다');
     }
@@ -238,7 +241,7 @@ router.get('/:workspace/dms/:id/chats', isLoggedIn, async (req, res, next) => {
       return res.status(403).send('존재하지 않는 워크스페이스 입니다');
     }
 
-    const exUser = await User.findOne({ where: { id: req.params.id } });
+    const exUser = await User.findOne({ where: { id: parseInt(req.params.id, 10) } });
     if (!exUser) {
       return res.status(403).send('존재하지 않는 유저입니다');
     }
@@ -486,7 +489,7 @@ router.post('/:workspace/dms/:id/images', isLoggedIn, upload.array('image'), asy
       return res.status(403).send('존재하지 않는 워크스페이스 입니다');
     }
 
-    const exUser = await exWorkspace.getMembers({ where: { id: req.params.id } });
+    const exUser = await exWorkspace.getMembers({ where: { id: parseInt(req.params.id, 10) } });
     if (!exUser) {
       return res.status(403).send('존재하지 않는 유저입니다');
     }
