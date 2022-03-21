@@ -33,6 +33,7 @@ const LogIn = () => {
           },
         )
         .then((response) => {
+          console.log(response);
           mutate();
         })
         .catch((error) => {
