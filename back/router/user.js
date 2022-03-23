@@ -37,9 +37,9 @@ router.post('/login', isNotLoggedIn, (req, res, next) => {
       //이떄부터 req.user에 유저 정보가 담긴다
       console.log('로그인 성공!');
 
-      const redisClient = new redis.createClient();
-      await redisClient.connect();
-      await redisClient.SET('test', 'test');
+      // const redisClient = new redis.createClient();
+      // await redisClient.connect();
+      // await redisClient.SET('test', 'test');
 
       return res.status(200).send('로그인 성공');
     });
