@@ -8,9 +8,8 @@ const { createServer } = require('http');
 const path = require('path');
 const hpp = require('hpp');
 const helmet = require('helmet');
-const csp = require('helmet-csp');
-
 const useSocket = require('./socket');
+
 const passportConfig = require('./passport');
 const db = require('./models');
 const dotenv = require('dotenv');
@@ -19,6 +18,7 @@ const workspaceRouter = require('./router/workspace');
 dotenv.config();
 const app = express();
 const httpServer = createServer(app);
+const PORT = process.env.NODE_ENV === 'production' ? 80 : 3095;
 
 db.sequelize
   .sync()
@@ -72,4 +72,5 @@ app.get('*', (req, res, next) => {
 });
 
 useSocket(httpServer, app);
-httpServer.listen(80);
+
+httpServer.listen(PORT);

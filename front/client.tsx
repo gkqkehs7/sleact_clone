@@ -8,7 +8,7 @@ import axios from 'axios';
 import App from './layouts/App';
 
 axios.defaults.withCredentials = true;
-// axios.defaults.baseURL = process.env.NODE_ENV === 'production' ? 'http://15.164.103.236' : 'http://localhost:80';
+axios.defaults.baseURL = process.env.NODE_ENV === 'production' ? 'http://15.164.103.236' : 'http://localhost:3095';
 
 render(
   <BrowserRouter>

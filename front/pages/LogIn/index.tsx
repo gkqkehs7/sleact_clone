@@ -8,6 +8,7 @@ import useSWR from 'swr';
 
 import { backUrl } from '../../config';
 
+console.log(backUrl);
 const LogIn = () => {
   const {
     data: userData,

@@ -1,6 +1,7 @@
 const { Server } = require('socket.io');
 
 const onlineMap = {};
+const redis = require('redis');
 module.exports = (server, app) => {
   const io = new Server(server, {
     cors: {
@@ -12,7 +13,9 @@ module.exports = (server, app) => {
   app.set('onlineMap', onlineMap);
 
   const workspace = io.of(/^\/ws-.+$/);
-  workspace.on('connect', (socket) => {
+  workspace.on('connect', async (socket) => {
+    const redisClient = new redis.createClient();
+    await redisClient.connect();
     const newNamespace = socket.nsp;
 
     if (!onlineMap[newNamespace.name]) {
@@ -31,6 +34,7 @@ module.exports = (server, app) => {
 
       //이렇게 보내면 { ASODKFAEWFJG: 3 } 이렇게 감
       //객체에서 값들을 배열로 얻는법
+      redisClient.SET('USERS', onlineMap);
       newNamespace.emit('onlineList', Object.values(onlineMap[newNamespace.name]));
     });
 

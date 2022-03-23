@@ -91,6 +91,7 @@ const Channel = () => {
         (data.content.startsWith('uploads\\') || data.content.startsWith('uploads/') || data.UserId !== myData?.id)
       ) {
         mutateChat((chatData) => {
+          console.log('메세지 도착!');
           chatData?.[0].unshift(data);
           return chatData;
         }, false).then(() => {
@@ -115,7 +116,7 @@ const Channel = () => {
         });
       }
     },
-    [channel, myData, mutateChat],
+    [channel, myData, mutateChat, onSubmitForm],
   );
   useEffect(() => {
     // on에선 이벤트 이름, callback 함수
