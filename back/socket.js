@@ -35,7 +35,7 @@ module.exports = (server, app) => {
       //이렇게 보내면 { ASODKFAEWFJG: 3 } 이렇게 감
       //객체에서 값들을 배열로 얻는법
       // redisClient.SET('USERS', onlineMap);
-      // newNamespace.emit('onlineList', Object.values(onlineMap[newNamespace.name]));
+      newNamespace.emit('onlineList', Object.values(onlineMap[newNamespace.name]));
     });
 
     socket.on('disconnect', () => {
