@@ -51,7 +51,7 @@ const LogIn = () => {
 
   return (
     <div id="container">
-      <Header>Sleact</Header>
+      <Header>모두의 체팅 어플</Header>
       <Form onSubmit={onSubmit}>
         <Label id="email-label">
           <span>이메일 주소</span>
