@@ -83,7 +83,7 @@ const config: Configuration = {
     static: { directory: path.resolve(__dirname) },
     proxy: {
       '/api/': {
-        target: 'http://15.164.103.236',
+        target: 'http://52.79.78.8',
         changeOrigin: true,
         ws: true,
       },
