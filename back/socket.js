@@ -28,7 +28,6 @@ module.exports = (server, app) => {
       //room 입장
       channelId.forEach((channelId) => {
         const roomName = `${newNamespace.name}-${channelId}`;
-        console.log('socket:', roomName);
         socket.join(roomName);
       });
 
@@ -38,9 +37,10 @@ module.exports = (server, app) => {
       newNamespace.emit('onlineList', Object.values(onlineMap[newNamespace.name]));
     });
 
-    socket.on('disconnect', () => {
+    socket.on('disconnect', async () => {
       delete onlineMap[socket.nsp.name][socket.id];
 
+      await redisClient.SET('users', JSON.stringify(onlineMap));
       console.log(onlineMap[newNamespace.name]);
 
       newNamespace.emit('onlineList', Object.values(onlineMap[newNamespace.name]));
