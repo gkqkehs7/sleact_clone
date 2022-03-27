@@ -10,8 +10,9 @@ const hpp = require('hpp');
 const helmet = require('helmet');
 const useSocket = require('./socket');
 
+const redis = require('redis');
 const connectRedis = require('connect-redis');
-const client = require('./redis');
+const client = redis.createClient();
 
 const passportConfig = require('./passport');
 const db = require('./models');
