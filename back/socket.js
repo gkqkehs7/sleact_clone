@@ -3,6 +3,14 @@ const { redisClient } = require('./redis');
 
 const onlineMap = {};
 module.exports = (server, app) => {
+  if (Object.keys(onlineMap).length === 0) {
+    //서버가 재시작해서 이게 비어있을 경우
+    redisClient.get('users', (err, data) => {
+      console.log(data);
+    });
+  } else {
+  }
+
   const io = new Server(server, {
     cors: {
       origin: ['http://localhost:3090'],
@@ -23,8 +31,7 @@ module.exports = (server, app) => {
 
     socket.on('login', async ({ id, channelId }) => {
       onlineMap[newNamespace.name][socket.id] = id; //namespace입장
-
-      await redisClient.SET('users', JSON.stringify(onlineMap));
+      redisClient.SET('users', JSON.stringify(onlineMap));
       //room 입장
       channelId.forEach((channelId) => {
         const roomName = `${newNamespace.name}-${channelId}`;
@@ -40,7 +47,6 @@ module.exports = (server, app) => {
     socket.on('disconnect', async () => {
       delete onlineMap[socket.nsp.name][socket.id];
 
-      await redisClient.SET('users', JSON.stringify(onlineMap));
       console.log(onlineMap[newNamespace.name]);
 
       newNamespace.emit('onlineList', Object.values(onlineMap[newNamespace.name]));
