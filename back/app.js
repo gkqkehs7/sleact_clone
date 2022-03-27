@@ -12,7 +12,6 @@ const useSocket = require('./socket');
 
 const redis = require('redis');
 const connectRedis = require('connect-redis');
-const client = redis.createClient();
 
 const passportConfig = require('./passport');
 const db = require('./models');
@@ -63,16 +62,25 @@ app.use(cookieParser('nodeasdf'));
 
 //session설정 + redis
 passportConfig();
-const RedisStore = connectRedis(session);
-const sessionOption = {
-  resave: false,
-  saveUninitialized: false,
-  secret: 'nodeasdf',
-  store: new RedisStore({ client }),
-};
-app.use(session(sessionOption));
-app.use(passport.initialize());
-app.use(passport.session());
+
+(async () => {
+  const client = redis.createClient();
+
+  client.on('error', (err) => console.log('Redis Client Error', err));
+
+  await client.connect();
+
+  const RedisStore = connectRedis(session);
+  const sessionOption = {
+    resave: false,
+    saveUninitialized: false,
+    secret: 'nodeasdf',
+    store: new RedisStore({ client }),
+  };
+  app.use(session(sessionOption));
+  app.use(passport.initialize());
+  app.use(passport.session());
+})();
 
 //dist파일 경로 설정
 app.use('/api/users', userRouter);
