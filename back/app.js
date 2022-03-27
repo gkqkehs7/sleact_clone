@@ -10,6 +10,9 @@ const hpp = require('hpp');
 const helmet = require('helmet');
 const useSocket = require('./socket');
 
+const connectRedis = require('connect-redis');
+const client = require('./redis');
+
 const passportConfig = require('./passport');
 const db = require('./models');
 const dotenv = require('dotenv');
@@ -20,6 +23,7 @@ const app = express();
 const httpServer = createServer(app);
 const PORT = process.env.NODE_ENV === 'production' ? 80 : 3095;
 
+//db설정
 db.sequelize
   .sync()
   .then(() => {
@@ -47,24 +51,29 @@ app.all('/*', function (req, res, next) {
   next();
 });
 
+//front에서 온 정보 읽을 수 있게 설정
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-passportConfig();
+//사진 저장할곳 설정
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(cookieParser('nodeasdf'));
 
+//session설정 + redis
+passportConfig();
+const RedisStore = connectRedis(session);
 const sessionOption = {
   resave: false,
   saveUninitialized: false,
   secret: 'nodeasdf',
+  store: new RedisStore({ client }),
 };
-
 app.use(session(sessionOption));
 app.use(passport.initialize());
 app.use(passport.session());
 
+//dist파일 경로 설정
 app.use('/api/users', userRouter);
 app.use('/api/workspaces', workspaceRouter);
 app.get('*', (req, res, next) => {
