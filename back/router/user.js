@@ -6,7 +6,6 @@ const User = require('../models/user');
 const Workspace = require('../models/workspace');
 const Channel = require('../models/channel');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
-const redis = require('redis');
 
 var router = express.Router();
 

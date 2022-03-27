@@ -1,7 +1,7 @@
 const { Server } = require('socket.io');
+const { redisClient } = require('./redis');
 
 const onlineMap = {};
-const redis = require('redis');
 module.exports = (server, app) => {
   const io = new Server(server, {
     cors: {
@@ -14,8 +14,6 @@ module.exports = (server, app) => {
 
   const workspace = io.of(/^\/ws-.+$/);
   workspace.on('connect', async (socket) => {
-    const redisClient = new redis.createClient();
-    await redisClient.connect();
     const newNamespace = socket.nsp;
 
     if (!onlineMap[newNamespace.name]) {
@@ -23,8 +21,10 @@ module.exports = (server, app) => {
       onlineMap[newNamespace.name] = {};
     }
 
-    socket.on('login', ({ id, channelId }) => {
+    socket.on('login', async ({ id, channelId }) => {
       onlineMap[newNamespace.name][socket.id] = id; //namespace입장
+
+      await redisClient.SET('users', JSON.stringify(onlineMap));
       //room 입장
       channelId.forEach((channelId) => {
         const roomName = `${newNamespace.name}-${channelId}`;
