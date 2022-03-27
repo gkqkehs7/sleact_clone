@@ -10,9 +10,6 @@ const hpp = require('hpp');
 const helmet = require('helmet');
 const useSocket = require('./socket');
 
-const redis = require('redis');
-const connectRedis = require('connect-redis');
-
 const passportConfig = require('./passport');
 const db = require('./models');
 const dotenv = require('dotenv');
@@ -22,6 +19,8 @@ dotenv.config();
 const app = express();
 const httpServer = createServer(app);
 const PORT = process.env.NODE_ENV === 'production' ? 80 : 3095;
+
+const { redisClient, RedisStore } = require('./redis');
 
 //db설정
 db.sequelize
@@ -62,26 +61,16 @@ app.use(cookieParser('nodeasdf'));
 
 //session설정 + redis
 passportConfig();
-
-(async () => {
-  const client = redis.createClient();
-
-  client.on('error', (err) => console.log('Redis Client Error', err));
-
-  await client.connect();
-
-  console.log('여기안옴?');
-  const RedisStore = connectRedis(session);
-  const sessionOption = {
-    resave: false,
-    saveUninitialized: false,
-    secret: 'nodeasdf',
-    store: new RedisStore({ client }),
-  };
-  app.use(session(sessionOption));
-  app.use(passport.initialize());
-  app.use(passport.session());
-})();
+redisClient.connect().catch(console.error);
+const sessionOption = {
+  resave: false,
+  saveUninitialized: false,
+  secret: 'nodeasdf',
+  store: new RedisStore({ client: redisClient }),
+};
+app.use(session(sessionOption));
+app.use(passport.initialize());
+app.use(passport.session());
 
 //dist파일 경로 설정
 app.use('/api/users', userRouter);
