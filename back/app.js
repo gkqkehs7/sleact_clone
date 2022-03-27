@@ -19,8 +19,8 @@ dotenv.config();
 const app = express();
 const httpServer = createServer(app);
 const PORT = process.env.NODE_ENV === 'production' ? 80 : 3095;
-
-const { redisClient, RedisStore } = require('./redis');
+const { redisClient } = require('./redis');
+let RedisStore = require('connect-redis')(session);
 
 //db설정
 db.sequelize
