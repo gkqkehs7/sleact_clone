@@ -9,6 +9,9 @@ module.exports = (server, app) => {
       console.log(data);
     });
   } else {
+    redisClient.get('users', (err, data) => {
+      console.log(data);
+    });
   }
 
   const io = new Server(server, {
