@@ -70,6 +70,7 @@ passportConfig();
 
   await client.connect();
 
+  console.log('여기안옴?');
   const RedisStore = connectRedis(session);
   const sessionOption = {
     resave: false,
