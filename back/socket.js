@@ -5,11 +5,11 @@ const onlineMap = {};
 module.exports = (server, app) => {
   if (Object.keys(onlineMap).length === 0) {
     //서버가 재시작해서 이게 비어있을 경우
-    redisClient.get('users', (err, data) => {
+    redisClient.GET('users', (err, data) => {
       console.log(data);
     });
   } else {
-    redisClient.get('users', (err, data) => {
+    redisClient.GET('users', (err, data) => {
       console.log(data);
     });
   }
