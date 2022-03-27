@@ -1,3 +1,3 @@
 const redis = require('redis');
 
-exports.redisClient = redis.createClient();
+exports.redisClient = redis.createClient({ legacyMode: true });
